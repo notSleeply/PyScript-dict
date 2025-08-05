@@ -1,4 +1,4 @@
-# py-cambridge-dict-script
+# PyScript-dict
 
 这是一款专门用于处理剑桥词典相关数据的 Python 脚本，旨在为用户提供便捷、高效的词典数据处理体验，无论是进行语言研究、开发学习工具还是整理个人词汇库，都能发挥重要作用。
 
@@ -19,16 +19,16 @@
 1. 首先克隆本仓库到本地：
 
 ```
-git clone https://github.com/yourusername/py-cambridge-dict-script.git
+git clone https://github.com/notSleeply/PyScript-dict.git
 ```
 
-1. 进入项目目录：
+2. 进入项目目录：
 
 ```
-cd py-cambridge-dict-script
+cd PyScript-dict
 ```
 
-1. 安装所需依赖：
+3. 安装所需依赖：
 
 ```
 pip install -r requirements.txt
@@ -36,43 +36,38 @@ pip install -r requirements.txt
 
 ## 使用教程
 
-### 示例 1：提取并导出网页数据
+### 示例 1：处理本地词典数据
 
 ```
-from cambridge_handler import CambridgeHandler
+# 1. 准备词典文件
+# 将您的词典文件放在 ./dict/dictionary.txt 路径下
+# 词典格式应为每个词条占多行，以英文单词开头
 
-# 初始化处理器，传入剑桥词典网页URL
-handler = CambridgeHandler(url="https://dictionary.cambridge.org/dictionary/english/example")
-# 提取数据
-handler.extract_data()
-# 将数据导出为JSON格式
-handler.export_data("output.json", format="json")
+# 2. 运行脚本
+`make run`
+
+# 3. 查看结果
+# 处理后的结果将保存在 processed_dictionary.txt 文件中
+# 每个单词及其词性释义会以结构化格式呈现，例如：
+# abandon
+# - v  放弃；抛弃；
+# - n  放纵；狂热；
 ```
 
-### 示例 2：处理本地文件并筛选数据
+### 示例 2：自定义输入和输出文件
 
 ```
-from cambridge_handler import CambridgeHandler
+# 1. 修改main.py中的文件路径配置
+dictTxt = './your_custom_path/your_dictionary.txt'  # 自定义输入文件路径
+outputTxt = 'your_output_file.txt'                  # 自定义输出文件路径
 
-# 初始化处理器，传入本地文件路径
-handler = CambridgeHandler(file_path="local_cambridge_data.html")
-# 提取数据
-handler.extract_data()
-# 筛选出词性为名词的单词
-noun_data = handler.filter_data(pos="noun")
-# 将筛选后的数据导出为Excel格式
-handler.export_data("noun_words.xlsx", format="excel", data=noun_data)
+# 2. 运行脚本
+`make run`
 ```
 
 ## 依赖列表
 
-- requests：用于获取网页数据
-
-- beautifulsoup4：用于解析 HTML 内容
-
-- pandas：用于数据处理和格式转换
-
-- openpyxl：用于 Excel 文件的读写
+- re : Python内置的正则表达式模块，用于文本模式匹配和提取
 
 ## 许可证
 
