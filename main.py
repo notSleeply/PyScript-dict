@@ -21,17 +21,7 @@ pos_patterns = [
 ]
 
 # 初始化词性解释字典
-def get_empty_pos_explanations():
-    return {
-        'n': [],
-        'v': [],
-        'adj': [],
-        'adv': [],
-        'prep': [],
-        'conj': [],
-        'pron': [],
-        'other': []
-    }
+POS_TYPES = ['n', 'v', 'adj', 'adv', 'prep', 'conj', 'pron', 'other']
 
 # 提取单词
 def extract_word(entry):
@@ -42,7 +32,7 @@ def extract_word(entry):
 
 # 提取所有中文释义
 def extract_explanations(entry, pos_patterns):
-    pos_explanations = get_empty_pos_explanations()
+    pos_explanations = {pos: [] for pos in POS_TYPES}
     
     # 提取所有中文释义
     for pattern, pos in pos_patterns:
