@@ -1,5 +1,7 @@
 import re
 
+dictTxt = './dict/dictionary.txt'
+
 def process_dictionary(text):
     entries = re.split(r'\n(?=[a-zA-Z-]+\s)', text.strip())
     results = []
@@ -67,7 +69,7 @@ def process_dictionary(text):
     return '\n\n'.join(results)
 
 if __name__ == "__main__":
-    with open('dictionary.txt', 'r', encoding='utf-8') as f:
+    with open(dictTxt, 'r', encoding='utf-8') as f:
         dictionary_text = f.read()
     processed_content = process_dictionary(dictionary_text)
     with open('processed_dictionary.txt', 'w', encoding='utf-8') as f:
