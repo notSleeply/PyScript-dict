@@ -1,9 +1,10 @@
 import re
 
-# 词典文件路径
-dictTxt = './dict/dictionary.txt'
-# 保存的文件路径
-outputTxt = 'processed_dictionary1.txt'
+import os
+
+dictName = 'dictionary'
+dictTxt = os.path.join('./dict', f'{dictName}.txt')
+processedTxt = os.path.join('./processed', f'processed_{dictName}.txt')
 
 # 词性正则
 pos_patterns = [
@@ -86,10 +87,31 @@ def process_dictionary(text):
 
     return '\n\n'.join(results)
 
+# 获取唯一文件名
+def get_unique_filename(filepath):
+    if not os.path.exists(filepath):
+        return filepath
+
+    # 分离文件名和扩展名
+    directory = os.path.dirname(filepath)
+    filename = os.path.basename(filepath)
+    name, ext = os.path.splitext(filename)
+
+    # 查找下一个可用的数字
+    counter = 1
+    while True:
+        new_filename = f"{name}{counter}{ext}"
+        new_filepath = os.path.join(directory, new_filename)
+        if not os.path.exists(new_filepath):
+            return new_filepath
+        counter += 1
+
 # 将内容保存到文件
 def save_to_file(content, filename):
-    with open(filename, 'w', encoding='utf-8') as f:
+    unique_filename = get_unique_filename(filename)
+    with open(unique_filename, 'w', encoding='utf-8') as f:
         f.write(content)
+    return unique_filename
 
 
 if __name__ == "__main__":
@@ -98,5 +120,5 @@ if __name__ == "__main__":
 
     processed_content = process_dictionary(dictionary_text)
     
-    save_to_file(processed_content, outputTxt)
-    print(f"处理完成，结果已保存到{outputTxt}")
+    actual_filename = save_to_file(processed_content, processedTxt)
+    print(f"处理完成，结果已保存到 {actual_filename}")
