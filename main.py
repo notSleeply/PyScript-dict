@@ -1,10 +1,12 @@
 import re
-
 import os
+from src.split_by_initial import split_dictionary_by_initial
+from tools.unique import get_unique_filename
 
 dictName = 'dictionary'
 dictTxt = os.path.join('./dict', f'{dictName}.txt')
 processedTxt = os.path.join('./processed', f'processed_{dictName}.txt')
+output_dir = os.path.join('./dictJson/', f'{dictName}')
 
 # 词性正则
 pos_patterns = [
@@ -87,25 +89,6 @@ def process_dictionary(text):
 
     return '\n\n'.join(results)
 
-# 获取唯一文件名
-def get_unique_filename(filepath):
-    if not os.path.exists(filepath):
-        return filepath
-
-    # 分离文件名和扩展名
-    directory = os.path.dirname(filepath)
-    filename = os.path.basename(filepath)
-    name, ext = os.path.splitext(filename)
-
-    # 查找下一个可用的数字
-    counter = 1
-    while True:
-        new_filename = f"{name}{counter}{ext}"
-        new_filepath = os.path.join(directory, new_filename)
-        if not os.path.exists(new_filepath):
-            return new_filepath
-        counter += 1
-
 # 将内容保存到文件
 def save_to_file(content, filename):
     unique_filename = get_unique_filename(filename)
@@ -122,3 +105,5 @@ if __name__ == "__main__":
     
     actual_filename = save_to_file(processed_content, processedTxt)
     print(f"处理完成，结果已保存到 {actual_filename}")
+
+    split_dictionary_by_initial(actual_filename, output_dir)
