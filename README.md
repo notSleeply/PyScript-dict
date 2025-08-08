@@ -59,7 +59,7 @@ pip install -r requirements.txt
 
 ```python
 """
-main.py  - **调度中心**
+`main.py`  - **调度中心**
 1. 解析`config` 配置的参数（选择输入文件、解析器、导出类型等）
 2. 根据参数调用对应的 `parser/` 模块解析词典
 3. 把解析结果交给 `typer/` 模块导出到 `dict/processed/` 对应的子文件夹
@@ -86,6 +86,7 @@ main.py  - **调度中心**
 
 dict_name = 'dictionary'
 """ 词典名称，用于生成文件名和路径 """
+
 ```
 
 #### Git提交规范

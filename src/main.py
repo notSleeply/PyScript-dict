@@ -1,105 +1,18 @@
 """
-main.py  - **调度中心**
-
+`main.py`  - **调度中心**
 1. 解析`config` 配置的参数（选择输入文件、解析器、导出类型等）
 2. 根据参数调用对应的 `parser/` 模块解析词典
 3. 把解析结果交给 `typer/` 模块导出到 `dict/processed/` 对应的子文件夹
 """
-import re
-from config import dictTxt, processedTxt, output_dir,pos_patterns,POS_TYPES
-from src.typer.split_by_initial import split_dictionary_by_initial
-from src.tools.unique import get_unique_filename
-
-# 提取单词
-def extract_word(entry):
-    word_match = re.match(r'^([a-zA-Z-]+)', entry)
-    if word_match:
-        return word_match.group(1)
-    return None
-
-# 匹配第一个音标
-def extract_phonetic(entry):
-    match = re.search(r"/[^/]+/", entry)
-    if match:
-        return match.group(0)
-    return None
-
-# 提取所有中文释义
-def extract_explanations(entry, pos_patterns):
-    pos_explanations = {pos: [] for pos in POS_TYPES}
-    
-    # 提取所有中文释义
-    for pattern, pos in pos_patterns:
-        for match in re.finditer(pattern, entry, re.IGNORECASE):
-            chinese = match.group(1)
-            chinese = re.sub(r'[^\u4e00-\u9fa5；，、]', '', chinese)
-            if chinese and chinese not in pos_explanations[pos]:
-                pos_explanations[pos].append(chinese)
-    
-    # 兜底：如果没有匹配到，直接提取所有中文短语
-    if not any(pos_explanations.values()):
-        all_chinese = re.findall(r'[\u4e00-\u9fa5]{2,}', entry)
-        if all_chinese:
-            pos_explanations['other'].extend(all_chinese)
-    
-    return pos_explanations
-
-# 格式化输出结果
-def format_entry_result(word, phonetic, pos_explanations):
-    result_lines = [word]
-    if phonetic:
-        result_lines.append(f"* {phonetic}")
-    for pos in ['n', 'v', 'adj', 'adv', 'prep', 'conj', 'pron', 'other']:
-        if pos_explanations[pos]:
-            explanations = '；'.join(pos_explanations[pos])
-            result_lines.append(f"- {pos}  {explanations}；")
-    
-    if len(result_lines) > 1:
-        return '\n'.join(result_lines)
-    return None
-
-# 处理词典文本，提取单词和释义
-def process_dictionary(text):
-    entries = re.split(r'\n(?=[a-zA-Z-]+\s)', text.strip())
-    results = []
-
-    for entry in entries:
-        if not entry.strip():
-            continue
-
-        # 提取单词
-        word = extract_word(entry)
-        if not word:
-            continue
-
-        phonetic = extract_phonetic(entry)
-        # 提取释义
-        pos_explanations = extract_explanations(entry, pos_patterns)
-        
-        # 构建输出
-        formatted_result = format_entry_result(word, phonetic, pos_explanations)
-        if formatted_result:
-            results.append(formatted_result)
-
-    return '\n\n'.join(results)
-
-# 将内容保存到文件
-def save_to_file(content, filename):
-    unique_filename = get_unique_filename(filename)
-    with open(unique_filename, 'w', encoding='utf-8') as f:
-        f.write(content)
-    return unique_filename
+from config import dict_name
+from parser.words100 import parse_word100
 
 def main():
-    with open(dictTxt, 'r', encoding='utf-8') as f:
-        dictionary_text = f.read()
+    match dict_name :
+        case "百词斩词典":
+            parse_word100()
 
-    processed_content = process_dictionary(dictionary_text)
-    
-    actual_filename = save_to_file(processed_content, processedTxt)
-    print(f"处理完成，结果已保存到 {actual_filename}")
 
-    split_dictionary_by_initial(actual_filename, output_dir)
 
 if __name__ == "__main__":
     main()

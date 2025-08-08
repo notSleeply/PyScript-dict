@@ -1,0 +1,1 @@
+from .words100 import parse_word100
