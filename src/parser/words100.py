@@ -3,9 +3,9 @@
 1. 解析百词斩词典
 """
 
-def parse_word100():
+def parse_words100():
     """
-    - 函数名: parse_word100
+    - 函数名: parse_words100
     - 作用: 解析百词斩词典内容
     - 参数:
         content (str): 百词斩词典的文本内容
