@@ -1,15 +1,27 @@
+"""
+main.py  - **调度中心**
+
+1. 解析`config` 配置的参数（选择输入文件、解析器、导出类型等）
+2. 根据参数调用对应的 `parser/` 模块解析词典
+3. 把解析结果交给 `typer/` 模块导出到 `dict/processed/` 对应的子文件夹
+"""
 import re
-from config.config import dictTxt, processedTxt, output_dir,pos_patterns,POS_TYPES
-from src.split_by_initial import split_dictionary_by_initial
-from tools.unique import get_unique_filename
-
-
+from config import dictTxt, processedTxt, output_dir,pos_patterns,POS_TYPES
+from src.typer.split_by_initial import split_dictionary_by_initial
+from src.tools.unique import get_unique_filename
 
 # 提取单词
 def extract_word(entry):
     word_match = re.match(r'^([a-zA-Z-]+)', entry)
     if word_match:
         return word_match.group(1)
+    return None
+
+# 匹配第一个音标
+def extract_phonetic(entry):
+    match = re.search(r"/[^/]+/", entry)
+    if match:
+        return match.group(0)
     return None
 
 # 提取所有中文释义
@@ -33,8 +45,10 @@ def extract_explanations(entry, pos_patterns):
     return pos_explanations
 
 # 格式化输出结果
-def format_entry_result(word, pos_explanations):
+def format_entry_result(word, phonetic, pos_explanations):
     result_lines = [word]
+    if phonetic:
+        result_lines.append(f"* {phonetic}")
     for pos in ['n', 'v', 'adj', 'adv', 'prep', 'conj', 'pron', 'other']:
         if pos_explanations[pos]:
             explanations = '；'.join(pos_explanations[pos])
@@ -57,12 +71,13 @@ def process_dictionary(text):
         word = extract_word(entry)
         if not word:
             continue
-        
+
+        phonetic = extract_phonetic(entry)
         # 提取释义
         pos_explanations = extract_explanations(entry, pos_patterns)
         
         # 构建输出
-        formatted_result = format_entry_result(word, pos_explanations)
+        formatted_result = format_entry_result(word, phonetic, pos_explanations)
         if formatted_result:
             results.append(formatted_result)
 
@@ -75,8 +90,7 @@ def save_to_file(content, filename):
         f.write(content)
     return unique_filename
 
-
-if __name__ == "__main__":
+def main():
     with open(dictTxt, 'r', encoding='utf-8') as f:
         dictionary_text = f.read()
 
@@ -86,3 +100,6 @@ if __name__ == "__main__":
     print(f"处理完成，结果已保存到 {actual_filename}")
 
     split_dictionary_by_initial(actual_filename, output_dir)
+
+if __name__ == "__main__":
+    main()

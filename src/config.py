@@ -1,14 +1,20 @@
 import os
 
-# 配置词典文件名词
-dictName = 'dictionary'
+dict_name = 'dictionary'
+""" 词典名称，用于生成文件名和路径 """
 
-# 配置文件路径
-dictTxt = os.path.join('./dict', f'{dictName}.txt')
-processedTxt = os.path.join('./processed', f'processed_{dictName}.txt')
-output_dir = os.path.join('./dictJson/', f'{dictName}')
+dict_type = 'txt'
+""" 原始词典文件类型 """
 
-# 词性正则
+dict_out_type = 'txt'
+""" 导出文件类型"""
+
+dict_raw = os.path.join('../dict/raw', f'{dict_name}.{dict_type}')
+""" 原词典文件路径 """
+
+dict_processed = os.path.join('../dict/processed', dict_out_type, f'processed_{dict_name}.{dict_out_type}')
+""" 处理后词典文件路径 """
+
 pos_patterns = [
     (r'noun.*?[*]?\s*([\u4e00-\u9fa5；，、]+)', 'n'),
     (r'verb.*?[*]?\s*([\u4e00-\u9fa5；，、]+)', 'v'),
@@ -22,6 +28,7 @@ pos_patterns = [
     (r'plural noun.*?[*]?\s*([\u4e00-\u9fa5；，、]+)', 'n'),
     (r'abbreviation.*?[*]?\s*([\u4e00-\u9fa5；，、]+)', 'other')
 ]
+"""  词性正则表达式列表，用于匹配不同的词性及其释义 """
 
-# 初始化词性解释字典
 POS_TYPES = ['n', 'v', 'adj', 'adv', 'prep', 'conj', 'pron', 'other']
+""" 词性列表，用于结果格式化 """

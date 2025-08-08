@@ -1,7 +1,7 @@
 import os
 import json
 import re
-from tools.unique import get_unique_dir
+from src.tools.unique import get_unique_dir
 
 def split_dictionary_by_initial(txt_path, output_dir):
 
@@ -26,10 +26,17 @@ def split_dictionary_by_initial(txt_path, output_dir):
             initial = '#'
         if initial not in initial_dict:
             initial_dict[initial] = []
-        explanations = [line.lstrip('- ').strip() for line in lines[1:]]
+        phonetic = None
+        explanations = []
+        for line in lines[1:]:
+            if line.startswith('* '):
+                phonetic = line[2:].strip()
+            elif line.startswith('- '):
+                explanations.append(line.lstrip('- ').strip())
         # 组装为字典结构，便于 json 存储
         initial_dict[initial].append({
             "word": word,
+            "phonetic": phonetic,
             "explanations": explanations
         })
     

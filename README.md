@@ -18,56 +18,98 @@
 
 1. 首先克隆本仓库到本地：
 
-```
+```powershell
 git clone https://github.com/notSleeply/PyScript-dict.git
 ```
 
 2. 进入项目目录：
 
-```
+```powershell
 cd PyScript-dict
 ```
 
 3. 安装所需依赖：
 
-```
+```powershell
 pip install -r requirements.txt
 ```
 
-## 使用教程
+## 目录结构
 
-### 示例 1：处理本地词典数据
-
-```
-# 1. 准备词典文件
-# 将您的词典文件放在 ./dict/dictionary.txt 路径下
-# 词典格式应为每个词条占多行，以英文单词开头
-
-# 2. 运行脚本
-`make run`
-
-# 3. 查看结果
-# 处理后的结果将保存在 processed_dictionary.txt 文件中
-# 每个单词及其词性释义会以结构化格式呈现，例如：
-# abandon
-# - v  放弃；抛弃；
-# - n  放纵；狂热；
+```shell
+├── src/                      # 源代码
+│   ├── config.py             # 📌 全局配置变量
+│   ├── main.py               # 程序入口
+│   ├── parser/               # 各种词典解析器，剑桥、牛津等
+│   ├── typer/                # 导出模块，各种文件类型。例：全部json，分类json，txt等。
+│   └── tools/                # 工具方法，
+├── dict/
+│   ├── raw/                  # 📥 原始词典文件
+│   └── processed/            # 📤 处理后的词典文件
+│   	├── json			  # Json 格式
+│   	├── csv			  	  # Csv 格式
+│       └── txt               # Txt 格式
 ```
 
-### 示例 2：自定义输入和输出文件
+## 规范
 
+#### 注释规范
+
+- 文件开头
+
+```python
+"""
+main.py  - **调度中心**
+1. 解析`config` 配置的参数（选择输入文件、解析器、导出类型等）
+2. 根据参数调用对应的 `parser/` 模块解析词典
+3. 把解析结果交给 `typer/` 模块导出到 `dict/processed/` 对应的子文件夹
+"""
 ```
-# 1. 修改main.py中的文件路径配置
-dictTxt = './your_custom_path/your_dictionary.txt'  # 自定义输入文件路径
-outputTxt = 'your_output_file.txt'                  # 自定义输出文件路径
 
-# 2. 运行脚本
-`make run`
+- 函数
+
+```python
+    """
+    - 函数名: add
+    - 作用: 计算两个整数的和
+    - 参数:
+        a (int): 第一个整数
+        b (int): 第二个整数
+    - 返回:
+        int: 两数之和
+    """
 ```
 
-## 依赖列表
+- 变量与定量
 
-- re : Python内置的正则表达式模块，用于文本模式匹配和提取
+```python
+
+dict_name = 'dictionary'
+""" 词典名称，用于生成文件名和路径 """
+```
+
+#### Git提交规范
+
+```shell
+feat : 新功能
+fix : 修复bug
+doc : 文档改变
+style : 代码格式改变
+refactor : 某个已有功能重构
+perf : 性能优化
+test : 增加测试
+build : 改变了build工具 如 grunt换成了 npm
+revert : 撤销上一次的 commit
+chore : 构建过程或辅助工具的变动
+```
+
+#### 模块规范
+
+- 每个模型下都要有`__init.py`，并且要导入模型下的内容。
+
+#### 命名规矩
+
+- 命名样式 : 采用**下滑线**连接方式。 
 
 ## 许可证
 
